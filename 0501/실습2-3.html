@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .checkedDecoration{
+            text-decoration: line-through;
+        }
+    </style>
+</head>
+<body>
+    <h1>Todo List</h1>
+    <div id="app">
+        <!-- 사용자 입력 파트 -->
+        <div>
+            <input type="text" v-model="word">
+            <button @click="plusTodoList()">+</button>
+        </div>
+        
+
+        <!-- 출력 파트 -->
+        <div>
+            <ul>
+                <li v-for="item in items"
+                :class="{ checkedDecoration: item.isChecked }">
+
+                    <input type="checkbox" v-model="item.isChecked">{{ item.text }}
+                </li>
+            </ul>
+        </div>
+        <button @click="deleteChecked()">완료 목록 삭제</button>
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script>
+        const app= new Vue({
+            el:'#app',
+            data: {
+                word: '',
+                items: localStorage.getItem('items') ? Json.parse(localStorage.getItem('items')) : [],
+            },
+            methods: {
+                plusTodoList() {
+                    if(this.word.length === 0) {
+                        alert('내용을 입력해 주세요!')
+                    } else {
+                        this.items.push({
+                            text: this.word,
+                            isChecked: false
+                        })
+                    }
+                    // 로컬스토리지 영억에 this.items를 저장
+                    // [참고] 로컬스토리지에는 문자열 밖에 저장하지 못함
+                    localStorage.setItem('items', Json.stringfy(this.items))
+                },
+                deleteChecked() {
+                    this.item = this.items.filter((element) =>{
+                        return element.isChecked === false
+                    })
+                }
+            }
+        })
+    </script>
+</body>
+</html>
